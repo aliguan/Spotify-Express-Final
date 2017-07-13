@@ -26,15 +26,15 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state';
 
-
 /* GET home page. */
 spotifyAuthRoutes.get('/login', (req, res, next) => {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
+
   // your application requests authorization
   var scope = 'user-read-private user-read-email playlist-read-collaborative user-follow-read user-library-read';
-  res.redirect('https://accounts.spotify.com/authorize?' +
+  res.json('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
       client_id: client_id,
@@ -88,9 +88,8 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
-          return body.json();
         });
-        
+
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -106,6 +105,7 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
     });
   }
 });
+
 
 
 spotifyAuthRoutes.get('/refresh_token', function(req, res) {
