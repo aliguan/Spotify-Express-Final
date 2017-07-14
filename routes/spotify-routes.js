@@ -7,7 +7,7 @@ const spotifyAuthRoutes   = express.Router();
 
 var client_id = '171a4c5c858c492f838a99535c3d3851'; // Your client id
 var client_secret = '354d93dcc82a42d2ba12064ff8a2eb65';// Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'http://localhost:4200/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -40,12 +40,14 @@ spotifyAuthRoutes.get('/login', (req, res, next) => {
       client_id: client_id,
       scope: scope,
       redirect_uri: redirect_uri,
-      state: state
+      state: state,
+      show_dialog: true
     }));
 });
 
 spotifyAuthRoutes.get('/callback', function(req, res) {
-
+    console.log(req.query.state);
+    console.log('heeelllo');
   // your application requests refresh and access tokens
   // after checking the state parameter
 
@@ -53,7 +55,9 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
-  if (state === null || state !== storedState) {
+ // || state !== storedState
+
+  if (state === null) { // || state !== storedState)
     res.redirect('/#' +
       querystring.stringify({
         error: 'state_mismatch'
@@ -75,7 +79,7 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
 
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-
+          console.log('hi');
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
@@ -91,11 +95,10 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
+        res.json({
             access_token: access_token,
             refresh_token: refresh_token
-            }));
+            });
           } else {
             res.redirect('/#' +
               querystring.stringify({
