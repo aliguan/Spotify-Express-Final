@@ -11,6 +11,8 @@ const dotenv       = require('dotenv');
 const request      = require('request');
 const querystring  = require('querystring');
 
+mongoose.connect('mongodb://localhost:8888/spotifydb');
+
 const app = express();
 
 // view engine setup
@@ -18,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
+app.locals.title = 'Spotify Database';
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
