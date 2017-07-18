@@ -11,7 +11,7 @@ const dotenv       = require('dotenv');
 const request      = require('request');
 const querystring  = require('querystring');
 
-mongoose.connect('mongodb://localhost:8888/spotifydb');
+mongoose.createConnection('mongodb://localhost/spotifydb');
 
 const app = express();
 
