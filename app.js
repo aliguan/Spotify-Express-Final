@@ -37,6 +37,9 @@ app.use('/', index);
 const spotifyAuthRoutes = require('./routes/spotify-routes');
 app.use('/', spotifyAuthRoutes);
 
+const userhRoutes = require('./routes/user-routes');
+app.use('/', userRoutes);
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
