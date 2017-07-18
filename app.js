@@ -11,7 +11,10 @@ const dotenv       = require('dotenv');
 const request      = require('request');
 const querystring  = require('querystring');
 
-mongoose.createConnection('mongodb://localhost/spotifydb');
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/spotifydb');
+
+var mongoDB = mongoose.connection;
 
 const app = express();
 
@@ -37,7 +40,7 @@ app.use('/', index);
 const spotifyAuthRoutes = require('./routes/spotify-routes');
 app.use('/', spotifyAuthRoutes);
 
-const userhRoutes = require('./routes/user-routes');
+const userRoutes = require('./routes/user-routes');
 app.use('/', userRoutes);
 
 // catch 404 and forward to error handler
