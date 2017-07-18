@@ -22,12 +22,24 @@ userRoutes.post('/newUser', (req, res, next) => {
         uri: req.body.uri,
         tracks: 'hi',
     });
-    console.log(newUser);
 
-    newUser.save( (err) => {
-        if (err)             { return res.status(500).json(err) }
-        if (newUser.errors) { return res.status(400).json(newUser) }
+    //Prevent Mulitple users from being created
+
+    User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
+        if(err) { return res.status(500).json(err) };
+        if( user ) {
+            console.log( user + ' was found' );
+        } else {
+            console.log('you suck');
+            newUser.save( (err) => {
+                if (err)             { return res.status(500).json(err) }
+                if (newUser.errors) { return res.status(400).json(newUser) }
+            });
+        }
+
     });
+
+
 
 });
 
