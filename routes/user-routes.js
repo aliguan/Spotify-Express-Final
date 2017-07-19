@@ -3,6 +3,7 @@ const querystring          = require('querystring');
 const cookieParser         = require('cookie-parser');
 
 const User                 = require('../models/user-model.js');
+const Tracks               = require('../models/tracks-model.js');
 
 const userRoutes           = express.Router();
 
@@ -21,7 +22,7 @@ userRoutes.post('/newUser', (req, res, next) => {
         //     ],
         type: req.body.type,
         uri: req.body.uri,
-        tracks: 'hi',
+        tracks: [],
     });
     console.log('new user made');
     //Prevent Mulitple users from being created
@@ -37,6 +38,31 @@ userRoutes.post('/newUser', (req, res, next) => {
                 if (newUser.errors) { return res.status(400).json(newUser) }
                 return true;
             });
+        }
+
+    });
+
+});
+
+userRoutes.post('/userTracks', (req, res, next) => {
+
+    const newTracks = new Tracks ({
+        artistNames: req.body.artistNames,
+        userEmail: req.body.userEamil
+    });
+
+    User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
+        if(err) { console.log('err from findone'); return res.status(500).json(err) };
+        if( userFound ) {
+            if (userFound.tracks[0] === newTracks.artistNames){
+                console.log('leave me alone');
+            } else {
+                userFound.tracks.push(newTracks.artistNames);
+                userFound.save( (err) => {
+                    if (err) { throw err }
+                    console.log("Tracks Added!");
+                });
+            }
         }
 
     });
