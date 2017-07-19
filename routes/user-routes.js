@@ -28,7 +28,7 @@ userRoutes.post('/newUser', (req, res, next) => {
     //Prevent Mulitple users from being created
 
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
-        if(err) { console.log('err from findone'); return res.status(500).json(err) };
+        if(err) { return res.status(500).json(err) };
         if( user ) {
             console.log('user already in database')
         } else {

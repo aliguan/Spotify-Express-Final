@@ -4,8 +4,6 @@ const Tracks   = require('./tracks-model.js');
 
 const UserSchema = Schema({
     //synonymous to spotify user model
-    firstname: String,
-    lastname: String,
     country: String,
     display_name: String,
     email: String,
