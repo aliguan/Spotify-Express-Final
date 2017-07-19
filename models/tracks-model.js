@@ -3,7 +3,6 @@ const Schema   = mongoose.Schema;
 
 const TracksSchema = Schema({
     artistNames: [String],
-
 });
 
 const Tracks = mongoose.model('Tracks', TracksSchema);

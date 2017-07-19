@@ -30,7 +30,7 @@ userRoutes.post('/newUser', (req, res, next) => {
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( user ) {
-            console.log( user + ' was found' );
+            console.log('user already in database')
         } else {
             newUser.save( (err) => {
                 console.log('trying to save');
@@ -54,9 +54,14 @@ userRoutes.post('/userTracks', (req, res, next) => {
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
-            if (userFound.tracks[0] === newTracks.artistNames){
-                console.log('leave me alone');
+
+            //Don't add tracks if they are duplicates
+            if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
+            {
+                    console.log('leave me alone');
+                    return true;
             } else {
+            // add tracks to User
                 userFound.tracks.push(newTracks.artistNames);
                 userFound.save( (err) => {
                     if (err) { throw err }
