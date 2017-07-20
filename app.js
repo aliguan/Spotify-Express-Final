@@ -10,6 +10,7 @@ const passport     = require('passport');
 const dotenv       = require('dotenv');
 const request      = require('request');
 const querystring  = require('querystring');
+const cors         = require('cors');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/spotifydb');
@@ -17,6 +18,7 @@ mongoose.connect('mongodb://localhost/spotifydb');
 var mongoDB = mongoose.connection;
 
 const app = express();
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
