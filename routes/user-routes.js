@@ -32,7 +32,7 @@ userRoutes.post('/newUser', (req, res, next) => {
         if(err) { return res.status(500).json(err) };
         if( user ) {
             console.log('user already in database');
-            return res.send(200);
+            res.sendStatus(200);
         } else {
             newUser.save( (err) => {
                 console.log('trying to save');
@@ -59,7 +59,7 @@ userRoutes.post('/userTracks', (req, res, next) => {
                 if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
                 {
                     console.log('leave me alone');
-                    return res.send(200);
+                    res.sendStatus(200);
                 } else {
                 // add tracks to User
                     userFound.tracks.push(newTracks.artistNames);
@@ -80,7 +80,6 @@ userRoutes.post('/location', (req, res, next) => {
         userEmail: req.body.userEmail
     });
 
-    console.log( req.body.coordinates)
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
@@ -92,6 +91,9 @@ userRoutes.post('/location', (req, res, next) => {
                         if (err) { throw err }
                         console.log("location Added!");
                     });
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(500);
                 }
             });
 
