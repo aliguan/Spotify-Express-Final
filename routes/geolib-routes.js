@@ -15,9 +15,26 @@ geoRoutes.post('/distance', (req, res, next) => {
         latitude: req.body.latitude,
         longitude: req.body.longitude
     }
-    const distance = geolib.getDistance( userPos, { latitude: 25.761681, longitude: -80.191788 }, 10 )
-    console.log('You are ' + geolib.convertUnit('mi', distance, 2) + ' miles from Miami');
-    res.sendStatus(200);
+
+    const matchedUsers = [];
+
+    User.find( {}, (err, userLocations) => {
+        if (!err) {
+
+            const distance = geolib.getDistance( userPos, userLocations.location[0], 10 );
+            const convertedDist =  geolib.convertUnit('mi', distance, 2);
+            if (convertedDist <= 25) {
+                matchedUsers.push(userLocations);
+                console.log(matchedUsers);
+            }
+
+        } else {
+           return res.sendStatus(500);
+        }
+
+
+    });
+
 });
 
 
