@@ -32,7 +32,7 @@ userRoutes.post('/newUser', (req, res, next) => {
         if(err) { return res.status(500).json(err) };
         if( user ) {
             console.log('user already in database');
-            return user;
+            return res.send(200);
         } else {
             newUser.save( (err) => {
                 console.log('trying to save');
@@ -59,7 +59,7 @@ userRoutes.post('/userTracks', (req, res, next) => {
                 if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
                 {
                     console.log('leave me alone');
-                    return userFound;
+                    return res.send(200);
                 } else {
                 // add tracks to User
                     userFound.tracks.push(newTracks.artistNames);
