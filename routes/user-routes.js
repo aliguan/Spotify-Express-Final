@@ -4,7 +4,7 @@ const cookieParser         = require('cookie-parser');
 
 const User                 = require('../models/user-model.js');
 const Tracks               = require('../models/tracks-model.js');
-const Location               = require('../models/location-model.js');
+const Location             = require('../models/location-model.js');
 
 const userRoutes           = express.Router();
 
@@ -16,11 +16,11 @@ userRoutes.post('/newUser', (req, res, next) => {
         email: req.body.email,
         href: req.body.href,
         id: req.body.id,
-        // images:
-        //     [{
-        //        url: req.body.images[0].url,
-        //      }
-        //     ],
+        images:
+            [{
+               url: req.body.images[0].url,
+             }
+            ],
         type: req.body.type,
         uri: req.body.uri,
         tracks: [],
@@ -55,20 +55,19 @@ userRoutes.post('/userTracks', (req, res, next) => {
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
-
             //Don't add tracks if they are duplicates
-            if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
-            {
-                console.log('leave me alone');
-                return userFound;
-            } else {
-            // add tracks to User
-                userFound.tracks.push(newTracks.artistNames);
-                userFound.save( (err) => {
-                    if (err) { throw err }
-                    console.log("Tracks Added!");
-                });
-            }
+                if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
+                {
+                    console.log('leave me alone');
+                    return userFound;
+                } else {
+                // add tracks to User
+                    userFound.tracks.push(newTracks.artistNames);
+                    userFound.save( (err) => {
+                        if (err) { throw err }
+                        console.log("Tracks Added!");
+                    });
+                }
         }
 
     });
@@ -81,12 +80,15 @@ userRoutes.post('/location', (req, res, next) => {
         userEmail: req.body.userEmail
     });
 
+    console.log( req.body.coordinates)
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
-
-            //Don't add tracks if they are duplicates
-
+            userFound.location.push(newLocation.coordinates);
+            userFound.save( (err) => {
+                if (err) { throw err }
+                console.log("location Added!");
+            });
         }
 
     });
