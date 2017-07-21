@@ -1,10 +1,11 @@
-const mongoose = require('mongoose');
-const Schema   = mongoose.Schema;
-const Tracks   = require('./tracks-model.js');
+const mongoose   = require('mongoose');
+const Schema     = mongoose.Schema;
+const Tracks     = require('./tracks-model.js');
+const Location   = require('./location-model.js');
 
 const UserSchema = Schema({
     //synonymous to spotify user model
-    location: String,
+    location: [ Location.schema ],
     country: String,
     display_name: String,
     email: String,

@@ -4,6 +4,7 @@ const cookieParser         = require('cookie-parser');
 
 const User                 = require('../models/user-model.js');
 const Tracks               = require('../models/tracks-model.js');
+const Location               = require('../models/location-model.js');
 
 const userRoutes           = express.Router();
 
@@ -75,7 +76,20 @@ userRoutes.post('/userTracks', (req, res, next) => {
 });
 
 userRoutes.post('/location', (req, res, next) => {
+    const newLocation = new Location({
+        coordinates: req.body.coordinates,
+        userEmail: req.body.userEmail
+    });
 
+    User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
+        if(err) { console.log('err from findone'); return res.status(500).json(err) };
+        if( userFound ) {
+
+            //Don't add tracks if they are duplicates
+
+        }
+
+    });
 });
 
 
