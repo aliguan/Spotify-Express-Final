@@ -84,6 +84,7 @@ userRoutes.post('/location', (req, res, next) => {
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
+            userFound.location.length = 0;
             userFound.location.push(newLocation.coordinates);
             userFound.save( (err) => {
                 if (err) { throw err }
