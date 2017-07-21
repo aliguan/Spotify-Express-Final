@@ -84,12 +84,17 @@ userRoutes.post('/location', (req, res, next) => {
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
-            userFound.location.length = 0;
-            userFound.location.push(newLocation.coordinates);
-            userFound.save( (err) => {
-                if (err) { throw err }
-                console.log("location Added!");
+            User.update({'_id': userFound._id },{ $pull:{ 'location': {} } }, (err, updateLocUser) =>{
+                if(err) { return res.status(500).json(err) };
+                if(updateLocUser) {
+                    userFound.location.push(newLocation.coordinates);
+                    userFound.save( (err) => {
+                        if (err) { throw err }
+                        console.log("location Added!");
+                    });
+                }
             });
+
         }
 
     });
