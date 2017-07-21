@@ -11,6 +11,7 @@ const dotenv       = require('dotenv');
 const request      = require('request');
 const querystring  = require('querystring');
 const cors         = require('cors');
+const geolib       = require('geolib');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/spotifydb');
