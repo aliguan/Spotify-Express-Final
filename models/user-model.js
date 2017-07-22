@@ -11,11 +11,11 @@ const UserSchema = Schema({
     email: String,
     href: String,
     id: String,
-    // images:
-    //     [ {
-    //        url: { type: String, default: '../public/images/avatar.png' }
-    //      }
-    //     ],
+    images:
+        [ {
+           url: { type: String, default: '../public/images/avatar.png' }
+         }
+        ],
     type: String,
     uri: String,
     tracks: [],
