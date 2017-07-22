@@ -16,11 +16,11 @@ userRoutes.post('/newUser', (req, res, next) => {
         email: req.body.email,
         href: req.body.href,
         id: req.body.id,
-        images:
-            [{
-               url: req.body.images[0].url,
-             }
-            ],
+        // images:
+        //     [{
+        //        url: req.body.images[0].url,
+        //      }
+        //     ],
         type: req.body.type,
         uri: req.body.uri,
         tracks: [],

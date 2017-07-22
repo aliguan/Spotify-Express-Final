@@ -9,6 +9,8 @@ const Location             = require('../models/location-model.js');
 
 const geoRoutes           = express.Router();
 
+const matchedUsers = [];
+
 geoRoutes.post('/distance', (req, res, next) => {
 
     const userPos = {
@@ -16,26 +18,34 @@ geoRoutes.post('/distance', (req, res, next) => {
         longitude: req.body.longitude
     }
 
-    const matchedUsers = [];
+    if (userPos) {
+        User.find( {}, (err, users) => {
 
-    User.find( {}, (err, userLocations) => {
-        if (!err) {
+            if (!err) {
+                matchedUsers.splice(0);
+                users.forEach((user) => {
+                    const distance = geolib.getDistance( userPos, user.location[0], 10 );
+                    const convertedDist =  geolib.convertUnit('mi', distance, 2);
 
-            const distance = geolib.getDistance( userPos, userLocations.location[0], 10 );
-            const convertedDist =  geolib.convertUnit('mi', distance, 2);
-            if (convertedDist <= 25) {
-                matchedUsers.push(userLocations);
-                console.log(matchedUsers);
+                    if (convertedDist <= 25) {
+                        matchedUsers.push(user._id);
+                    } else {
+                        console.log('No Users In Area');
+                    }
+
+            });
+            console.log(matchedUsers);
+            res.sendStatus(200);
+            } else {
+               return res.sendStatus(500);
             }
 
-        } else {
-           return res.sendStatus(500);
-        }
 
-
-    });
-
+        });
+    }
 });
+
+// geoRoutes.get('/matchedusers', (req, res))
 
 
 module.exports = geoRoutes;
