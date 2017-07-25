@@ -62,6 +62,7 @@ userRoutes.post('/userTracks', (req, res, next) => {
                     res.sendStatus(200);
                 } else {
                 // add tracks to User
+                    userFound.tracks.splice(0, userFound.tracks.length);
                     userFound.tracks.push(newTracks.artistNames);
                     userFound.save( (err) => {
                         if (err) { throw err }

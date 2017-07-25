@@ -14,6 +14,7 @@ const matchedUsers = [];
 geoRoutes.post('/distance', (req, res, next) => {
 
     const userPos = {
+        userEmail: req.body.userEmail,
         latitude: req.body.latitude,
         longitude: req.body.longitude
     }
@@ -28,6 +29,7 @@ geoRoutes.post('/distance', (req, res, next) => {
                     const convertedDist =  geolib.convertUnit('mi', distance, 2);
 
                     if ( /* convertedDist >= 2 && */ convertedDist <= 25) {
+                        User.find
                         matchedUsers.push(user);
                     } else {
                         console.log('No Users In Area');
