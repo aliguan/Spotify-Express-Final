@@ -9,18 +9,19 @@ const Location             = require('../models/location-model.js');
 const userRoutes           = express.Router();
 
 userRoutes.post('/newUser', (req, res, next) => {
-
+    console.log('hi')
+    console.log(req.body);
     const newUser = new User ({
         country: req.body.country,
         display_name: req.body.display_name,
         email: req.body.email,
         href: req.body.href,
         id: req.body.id,
-        images:
-            [{
-               url: req.body.images[0].url,
-             }
-            ],
+        // images:
+        //     [{
+        //        url: req.body.images[0].url,
+        //      }
+        //     ],
         type: req.body.type,
         uri: req.body.uri,
         tracks: [],
@@ -28,7 +29,7 @@ userRoutes.post('/newUser', (req, res, next) => {
     //Prevent Mulitple users from being created
 
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
-        if(err) { return res.status(500).json(err) };
+        if(err) { return console.log('cant create'); res.status(500).json(err); };
         if( user ) {
             console.log('user already in database');
             res.sendStatus(200);

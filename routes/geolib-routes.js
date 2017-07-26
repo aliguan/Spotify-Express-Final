@@ -27,30 +27,32 @@ geoRoutes.post('/distance', (req, res, next) => {
             if (!err) {
                 matchedUsers.splice(0);
                 otherUsers.forEach((otherUser) => {
-                    const distance = geolib.getDistance( userPos, otherUser.location[0], 10 );
-                    const convertedDist =  geolib.convertUnit('mi', distance, 2);
+                    if(otherUser.location[0]) {
+                        const distance = geolib.getDistance( userPos, otherUser.location[0], 10 );
+                        const convertedDist =  geolib.convertUnit('mi', distance, 2);
 
-                    //if users are within 25 miles radius, find the percentage that the libraries match
-                    if ( /* convertedDist >= 2 && */ convertedDist <= 25) {
-                        User.find({ 'email': `${req.body.userEmail}`}, (err, currentUser) => {
-                            currentUser[0].tracks[0].forEach((artist) => {
-                                otherUser.tracks[0].forEach((otherArtist) => {
-                                    if(artist === otherArtist) {
-                                        same += 1;
-                                    }
+                        //if users are within 25 miles radius, find the percentage that the libraries match
+                        if ( /* convertedDist >= 2 && */ convertedDist <= 25) {
+                            User.find({ 'email': `${req.body.userEmail}`}, (err, currentUser) => {
+                                currentUser[0].tracks[0].forEach((artist) => {
+                                    otherUser.tracks[0].forEach((otherArtist) => {
+                                        if(artist === otherArtist) {
+                                            same += 1;
+                                        }
+                                    });
                                 });
+                                let newMatchedUser = {
+                                    percentage: Math.round((same / (otherUser.tracks[0].length)) * 100),
+                                    user: otherUser._id,
+                                }
+
+                                matchedUsers.push(newMatchedUser);
+                                res.json(matchedUsers);
                             });
-                            let newMatchedUser = {
-                                percentage: Math.round((same / (otherUser.tracks[0].length)) * 100),
-                                user: otherUser._id,
-                            }
 
-                            matchedUsers.push(newMatchedUser);
-                            res.json(matchedUsers);
-                        });
-
-                    } else {
-                        console.log('No Users In Area');
+                        } else {
+                            console.log('No Users In Area');
+                        }
                     }
             });
 
