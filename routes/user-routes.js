@@ -25,7 +25,6 @@ userRoutes.post('/newUser', (req, res, next) => {
         uri: req.body.uri,
         tracks: [],
     });
-    console.log('new user made');
     //Prevent Mulitple users from being created
 
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
@@ -49,8 +48,16 @@ userRoutes.post('/userTracks', (req, res, next) => {
 
     const newTracks = new Tracks ({
         artistNames: req.body.artistNames,
-        userEmail: req.body.userEamil
+        userEmail: req.body.userEmail
     });
+
+    for( let i = 0; i < newTracks.artistNames.length; i++ ) {
+        newTracks.artistNames.forEach( (sameArtist) => {
+            if(newTracks.artistNames[i] === sameArtist) {
+                newTracks.artistNames.splice(newTracks.artistNames.indexOf(sameArtist), 1);
+            }
+        });
+    }
 
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
@@ -68,6 +75,7 @@ userRoutes.post('/userTracks', (req, res, next) => {
                         if (err) { throw err }
                         console.log("Tracks Added!");
                     });
+                    res.sendStatus(200);
                 }
         }
 

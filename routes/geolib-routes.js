@@ -20,16 +20,18 @@ geoRoutes.post('/distance', (req, res, next) => {
     }
 
     if (userPos) {
-        User.find( {}, (err, users) => {
+        User.find( { 'email': { $ne: `${req.body.userEmail}`}}, (err, otherUsers) => {
 
             if (!err) {
                 matchedUsers.splice(0);
-                users.forEach((user) => {
+                otherUsers.forEach((user) => {
                     const distance = geolib.getDistance( userPos, user.location[0], 10 );
                     const convertedDist =  geolib.convertUnit('mi', distance, 2);
 
                     if ( /* convertedDist >= 2 && */ convertedDist <= 25) {
-                        User.find
+                        User.find({ 'email': `${req.body.userEmail}`}, (err, currentUser) => {
+                            console.log(currentUser);
+                        });
                         matchedUsers.push(user);
                     } else {
                         console.log('No Users In Area');
