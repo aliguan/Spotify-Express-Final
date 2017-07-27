@@ -3,11 +3,6 @@ const Schema     = mongoose.Schema;
 const Tracks     = require('./tracks-model.js');
 const Location   = require('./location-model.js');
 
-const MatchedUserSchema = Schema({
-    percentage: Number,
-    userId: String
-})
-
 const UserSchema = Schema({
     //synonymous to spotify user model
     location: [],
@@ -24,11 +19,10 @@ const UserSchema = Schema({
     type: { type: String, optional: true },
     uri: { type: String, optional: true },
     tracks: [],
-    // matchedUsers: [ MatchedUserSchema ]
+    matchedUsers: []
 });
 
 const User = mongoose.model('User', UserSchema);
-const MatchedUser = mongoose.model('MatchedUser', MatchedUserSchema);
 
-module.exports = MatchedUser;
+
 module.exports = User;

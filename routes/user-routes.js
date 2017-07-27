@@ -9,8 +9,7 @@ const Location             = require('../models/location-model.js');
 const userRoutes           = express.Router();
 
 userRoutes.post('/newUser', (req, res, next) => {
-    console.log('hi')
-    console.log(req.body);
+
     const newUser = new User ({
         country: req.body.country,
         display_name: req.body.display_name,
@@ -52,13 +51,13 @@ userRoutes.post('/userTracks', (req, res, next) => {
         userEmail: req.body.userEmail
     });
 
-    for( let i = 0; i < newTracks.artistNames.length; i++ ) {
-        newTracks.artistNames.forEach( (sameArtist) => {
-            if(newTracks.artistNames[i] === sameArtist) {
-                newTracks.artistNames.splice(newTracks.artistNames.indexOf(sameArtist), 1);
-            }
-        });
-    }
+    // for( let i = 0; i < newTracks.artistNames.length; i++ ) {
+    //     newTracks.artistNames.forEach( (sameArtist) => {
+    //         if(newTracks.artistNames[i] === sameArtist) {
+    //             newTracks.artistNames.splice(newTracks.artistNames.indexOf(sameArtist), 1);
+    //         }
+    //     });
+    // }
 
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
@@ -89,7 +88,6 @@ userRoutes.post('/location', (req, res, next) => {
         coordinates: req.body.coordinates,
         userEmail: req.body.userEmail
     });
-
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {

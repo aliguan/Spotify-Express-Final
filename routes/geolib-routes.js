@@ -11,6 +11,11 @@ const geoRoutes           = express.Router();
 
 const matchedUsers = [];
 
+let newMatchedUser = {
+    percentage: '',
+    userId: String,
+}
+
 
 geoRoutes.post('/distance', (req, res, next) => {
 
@@ -21,8 +26,9 @@ geoRoutes.post('/distance', (req, res, next) => {
     }
     let same = 0;
 
+
     if (userPos) {
-        User.find( { 'email': { $ne: `${req.body.userEmail}`}}, { 'tracks': 1, 'location': 1 }, (err, otherUsers) => {
+        User.find( { 'email': { $ne: `${req.body.userEmail}`}}, { 'tracks': 1, 'location': 1, 'email': 1 }, (err, otherUsers) => {
 
             if (!err) {
                 matchedUsers.splice(0);
@@ -33,6 +39,7 @@ geoRoutes.post('/distance', (req, res, next) => {
 
                         //if users are within 25 miles radius, find the percentage that the libraries match
                         if ( /* convertedDist >= 2 && */ convertedDist <= 25) {
+
                             User.find({ 'email': `${req.body.userEmail}`}, (err, currentUser) => {
                                 currentUser[0].tracks[0].forEach((artist) => {
                                     otherUser.tracks[0].forEach((otherArtist) => {
@@ -41,13 +48,15 @@ geoRoutes.post('/distance', (req, res, next) => {
                                         }
                                     });
                                 });
-                                let newMatchedUser = {
-                                    percentage: Math.round((same / (otherUser.tracks[0].length)) * 100),
-                                    user: otherUser._id,
-                                }
 
-                                matchedUsers.push(newMatchedUser);
-                                res.json(matchedUsers);
+                                percentage =  Math.round((same / (otherUser.tracks[0].length)) * 100);
+
+                                 newMatchedUser = {
+                                    percentage: percentage,
+                                    userId: otherUser._id
+                                }
+                                pushmatches(newMatchedUser);
+
                             });
 
                         } else {
@@ -56,6 +65,7 @@ geoRoutes.post('/distance', (req, res, next) => {
                     }
             });
 
+            res.sendStatus(200);
             } else {
                return res.sendStatus(500);
             }
@@ -63,7 +73,42 @@ geoRoutes.post('/distance', (req, res, next) => {
 
         });
     }
+    function pushmatches(newMatchedUser) {
+        User.findOne( { 'email': `${req.body.userEmail}`}, (err, loggedinUser) => {
+            if(loggedinUser.matchedUsers.length === 0) {
+                loggedinUser.matchedUsers.push(newMatchedUser);
+                loggedinUser.save((err) => {
+                    if (err) {
+                        throw err
+                    } else {
+                        console.log('matches added')
+                    }
+
+                });
+            } else {
+                loggedinUser.matchedUsers.forEach( (alreadymatched) => {
+
+                    if (JSON.stringify(alreadymatched.userId) === JSON.stringify(newMatchedUser.userId) ) {
+                        console.log('dont do it');
+                    } else {
+                        loggedinUser.matchedUsers.push(newMatchedUser);
+                        loggedinUser.save((err) => {
+                            if (err) {
+                                throw err
+                            } else {
+                                console.log('matches added')
+                            }
+
+                        });
+                    }
+                });
+            }
+        }
+        );
+    }
+
 });
+
 
 
 module.exports = geoRoutes;
