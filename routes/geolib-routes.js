@@ -3,7 +3,8 @@ const querystring          = require('querystring');
 const cookieParser         = require('cookie-parser');
 const geolib               = require('geolib');
 const intersection         = require('array-intersection');
-const diff                 = require('arr-diff')
+const compare              = require('array-compare');
+const diff                = require('array-difference');
 
 const User                 = require('../models/user-model.js');
 const Tracks               = require('../models/tracks-model.js');
@@ -27,63 +28,78 @@ geoRoutes.post('/distance', (req, res, next) => {
     }
 
     function checkIfMatchedAlready(addThese, currentUser) {
-        otherArray = addThese;
-        currentUserAr = currentUser.matchedUsers[0];
-        let uniqueVals = diff(otherArray, currentUserAr);
-        console.log(uniqueVals);
-        console.log(currentUser.email)
-        if(uniqueVals.length > 0) {
-            User.findOne({'email': `${currentUser.email}`}, (err, changeThisUser) => {
-                uniqueVals.forEach((uniqueVal) => {
-                    changeThisUser.matchedUsers[0].push(uniqueVal);
-                    changeThisUser.save((err) => {
-                         if (err) {
-                            throw err
-                        } else {
-                            console.log('i did iferwertt!');
-                        };
-                    });
-                })
-            });
 
-        } else {
-            console.log('all the values are the same');
-        }
+        otherArray = addThese;
+        currentUserAr = currentUser.matchedUsers;
+
+        let otherArray2 = otherArray.map((otherId) => {
+            return JSON.stringify(otherId.userId);
+        })
+
+        let currentUserAr2 = currentUserAr.map((matchedids) => {
+            return JSON.stringify(matchedids.userId);
+        })
+
+        let uniqueVals = diff(otherArray2, currentUserAr2 );
+        let uniqueVals2 = uniqueVals.map((oneVal) => {
+            return JSON.parse(oneVal);
+        })
+
+        uniqueVals2.map((oneId) => {
+            addThese.forEach((matchedUser) =>{
+                if(oneId == matchedUser.userId) {
+                    User.findById({ '_id': `${currentUser._id}`}, (err, theUser) => {
+                        theUser.matchedUsers.push(matchedUser);
+                        theUser.save((err) => {
+                            if(err) { throw err}
+                            else {
+                                console.log('i added stuff');
+                            }
+                        });
+                    });
+
+
+                } else {
+                    console.log('no new things to add')
+                }
+            })
+        })
+
     }
 
     function findSimilarities(distMatched) {
         let count = 0
         let percentageArray = [];
         User.find({'email': `${userPos.userEmail}`}, {'tracks': 1, 'location': 1, 'email': 1, 'matchedUsers': 1}, (err, currentUser) => {
-            if(currentUser[0].tracks[0]) {
+            if(!currentUser[0].tracks[0]) {
+                console.log('please add tracks');
+                return;
+            }
                 distMatched.forEach((distUser, index, array) => {
                     count ++;
-
                     let poop = intersection(currentUser[0].tracks[0], distUser.tracks[0]);
                     newMatchedUser = {
                            percentage: Math.round((poop.length/distUser.tracks[0].length) * 100),
                            userId: distUser._id
+
+                    }
+                    if(currentUser[0].matchedUsers.length === 0) {
+                        currentUser[0].matchedUsers.push(newMatchedUser);
+                        currentUser[0].save((err) => {
+                            if(err) {
+                                throw err
+                            } else {
+                                console.log('i did it the first!');
+                            }
+                        });
                     }
                     percentageArray.push(newMatchedUser);
                     if(count === array.length) {
-                        if(currentUser[0].matchedUsers.length === 0) {
-                            currentUser[0].matchedUsers.push(percentageArray);
-                            currentUser[0].save((err) =>{
-                                if(err) {
-                                    throw err
-                                } else {
-                                    console.log('i did it!');
-                                }
-                            });
-                        } else {
                             checkIfMatchedAlready(percentageArray, currentUser[0]);
-                        }
                     }
 
                 });
-            } else {
-                console.log('please add tracks');
-            }
+
         });
     }
 
@@ -122,7 +138,6 @@ geoRoutes.post('/distance', (req, res, next) => {
             }
         });
     }
-
 
 });
 
