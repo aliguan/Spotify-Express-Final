@@ -110,6 +110,4 @@ userRoutes.post('/location', (req, res, next) => {
     });
 });
 
-
-
 module.exports = userRoutes;

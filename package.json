@@ -7,6 +7,8 @@
     "local": "nodemon ./bin/www"
   },
   "dependencies": {
+    "arr-diff": "^4.0.0",
+    "array-intersection": "^0.1.2",
     "bcrypt": "^1.0.2",
     "body-parser": "~1.16.0",
     "cookie-parser": "~1.4.3",
