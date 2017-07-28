@@ -18,7 +18,7 @@ let newMatchedUser = {
     percentage: '',
     userId: String,
 }
-
+let currentuseremail = '';
 geoRoutes.post('/distance', (req, res, next) => {
 
     const userPos = {
@@ -26,6 +26,7 @@ geoRoutes.post('/distance', (req, res, next) => {
         latitude: req.body.latitude,
         longitude: req.body.longitude
     }
+    currentuseremail = req.body.userEmail;
 
     function checkIfMatchedAlready(addThese, currentUser) {
 
@@ -101,6 +102,7 @@ geoRoutes.post('/distance', (req, res, next) => {
                 });
 
         });
+
     }
 
     function matchedIntersect(matchedUsers) {
@@ -134,11 +136,17 @@ geoRoutes.post('/distance', (req, res, next) => {
                     }
 
 
-                }, );
+                } );
             }
         });
     }
+    res.sendStatus(200);
+});
 
+geoRoutes.post('/getMatchedUsers', (req, res, next) => {
+    User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
+        res.json(user.matchedUsers);
+    })
 });
 
 
