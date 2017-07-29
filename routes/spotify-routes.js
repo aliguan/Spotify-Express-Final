@@ -96,6 +96,7 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
         res.json({
             access_token: access_token,
             refresh_token: refresh_token
+            why: 'why!'
             });
           } else {
             res.redirect('/#' +
