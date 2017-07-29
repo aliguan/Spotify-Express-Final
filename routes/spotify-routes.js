@@ -48,7 +48,7 @@ spotifyAuthRoutes.get('/login', (req, res, next) => {
     }));
 });
 
-spotifyAuthRoutes.get('/callback', function(req, res) {
+spotifyAuthRoutes.get('/callback2', function(req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
 
