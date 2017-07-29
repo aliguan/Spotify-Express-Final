@@ -144,8 +144,21 @@ geoRoutes.post('/distance', (req, res, next) => {
 });
 
 geoRoutes.post('/getMatchedUsers', (req, res, next) => {
+    let matchedUsers = [];
+    let count = 0
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
-        res.json(user.matchedUsers);
+        // if(matchedUsers.length === 0) {
+        //     res.sendStatus(404)
+        // }
+        user.matchedUsers.forEach((user, index, array) => {
+            User.find({'_id': `${user.userId}`}, (err, otherUser) => {
+                count++
+                matchedUsers.push(otherUser);
+                if(count === array.length) {
+                    res.json(matchedUsers);
+                }
+            })
+        })
     })
 });
 

@@ -9,23 +9,49 @@ const Location             = require('../models/location-model.js');
 const userRoutes           = express.Router();
 
 userRoutes.post('/newUser', (req, res, next) => {
+    console.log(req.body.images.length)
+    if(JSON.stringify(req.body.images.length) === JSON.stringify(0)) {
+        const newUser = new User ({
+            country: req.body.country,
+            display_name: req.body.display_name,
+            email: req.body.email,
+            href: req.body.href,
+            id: req.body.id,
+            type: req.body.type,
+            uri: req.body.uri,
+            tracks: [],
+        });
 
+        User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
+            if(err) { return console.log('cant create'); res.status(500).json(err); };
+            if( user ) {
+                console.log('user already in database');
+                res.sendStatus(200);
+            } else {
+                newUser.save( (err) => {
+                    console.log('trying to save');
+                    if (err)            { return res.status(500).json(err) }
+                    if (newUser.errors) { return res.status(400).json(newUser) }
+                });
+            }
+
+        });
+    } else {
     const newUser = new User ({
         country: req.body.country,
         display_name: req.body.display_name,
         email: req.body.email,
         href: req.body.href,
         id: req.body.id,
-        // images:
-        //     [{
-        //        url: req.body.images[0].url,
-        //      }
-        //     ],
+        images:
+            [{
+               url: req.body.images[0].url,
+             }
+            ],
         type: req.body.type,
         uri: req.body.uri,
         tracks: [],
     });
-    //Prevent Mulitple users from being created
 
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
         if(err) { return console.log('cant create'); res.status(500).json(err); };
@@ -41,6 +67,10 @@ userRoutes.post('/newUser', (req, res, next) => {
         }
 
     });
+
+    }
+    //Prevent Mulitple users from being created
+
 
 });
 
