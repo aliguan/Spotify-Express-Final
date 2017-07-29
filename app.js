@@ -26,7 +26,7 @@ const app = express();
 app.use(cors());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'viewsto'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // default value for title local
@@ -52,6 +52,10 @@ app.use('/', userRoutes);
 
 const geoRoutes = require('./routes/geolib-routes');
 app.use('/', geoRoutes);
+
+app.use((req, res, next) => {
+    res.sendFile(__dirname + '/public/index.html');
+})
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
