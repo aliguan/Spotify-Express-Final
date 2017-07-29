@@ -26,7 +26,7 @@ const app = express();
 app.use(cors());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, + '/dist'));
 app.set('view engine', 'ejs');
 
 // default value for title local
