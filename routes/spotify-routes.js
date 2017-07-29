@@ -96,10 +96,10 @@ spotifyAuthRoutes.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.status(200).json{
+        res.json({
             access_token: access_token,
             refresh_token: refresh_token,
-            };
+            });
           } else {
             res.redirect('/#' +
               querystring.stringify({
