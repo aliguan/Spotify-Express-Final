@@ -17,7 +17,7 @@ dotenv.config();
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.DEV);
 // mongoose.connect('mongodb://localhost/spotifydb');
 
 var mongoDB = mongoose.connection;
@@ -26,7 +26,7 @@ const app = express();
 app.use(cors());
 
 // view engine setup
-app.set('views', path.join(__dirname, '/dist'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // default value for title local
