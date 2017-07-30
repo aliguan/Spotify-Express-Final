@@ -145,22 +145,23 @@ geoRoutes.post('/distance', (req, res, next) => {
 
 geoRoutes.post('/getMatchedUsers', (req, res, next) => {
     let matchedUsers = [];
-    let matchedUserper = [];
+
     let count = 0
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
         // if(matchedUsers.length === 0) {
         //     res.sendStatus(404)
         // }
         user.matchedUsers.forEach((matcheduser, index, array) => {
-            matchedUserper.push(matcheduser.percentage);
+            let finalUser = {
+                percentage: matcheduser.percentage,
+                user: ''
+            }
             User.find({'_id': `${matcheduser.userId}`}, (err, otherUser) => {
                 count++
-                matchedUsers.push(otherUser);
+                finalUser.user = otherUser;
+                matchedUsers.push(finalUser);
                 if(count === array.length) {
-                    res.json({
-                        percentages: matchedUserper,
-                        users: matchedUsers
-                    });
+                    res.json(matchedUsers);
                 }
             })
         })
