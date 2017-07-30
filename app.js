@@ -17,9 +17,9 @@ dotenv.config();
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/spotifydb');
 // mongoose.connect('mongodb://localhost/spotifydb');
-// mongoose.connect(process.env.MONGODB_URI);
+// mongoose.connect('mongodb://localhost/spotifydb');
+mongoose.connect(process.env.MONGODB_URI);
 
 var mongoDB = mongoose.connection;
 
