@@ -80,7 +80,7 @@ geoRoutes.post('/distance', (req, res, next) => {
                     count ++;
                     let poop = intersection(currentUser[0].tracks[0], distUser.tracks[0]);
                     newMatchedUser = {
-                           percentage: Math.round((poop.length/distUser.tracks[0].length) * 100),
+                           percentage: Math.round((poop.length/currentUser[0].tracks[0].length) * 100),
                            userId: distUser._id
 
                     }
