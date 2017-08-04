@@ -2135,6 +2135,7 @@ Copyright (c) 2015 Daniel Eden
   overflow: hidden;
   border-radius: 50%;
   margin-right: 5px;
+  margin: auto;
 }
 .card .footer {
   padding: 0;
