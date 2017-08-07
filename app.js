@@ -54,6 +54,10 @@ app.use('/', userRoutes);
 const geoRoutes = require('./routes/geolib-routes');
 app.use('/', geoRoutes);
 
+const chatRoutes = require('./routes/chat');
+app.use('/', chatRoutes);
+
+
 app.use((req, res, next) => {
     res.sendFile(__dirname + '/public/index.html');
 })
