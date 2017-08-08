@@ -19,7 +19,7 @@ dotenv.config();
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost/spotifydb');
 // mongoose.connect('mongodb://localhost/spotifydb');
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.createConnection(process.env.MONGODB_URI);
 
 var mongoDB = mongoose.connection;
 
@@ -55,7 +55,7 @@ const geoRoutes = require('./routes/geolib-routes');
 app.use('/', geoRoutes);
 
 const chatRoutes = require('./routes/chat');
-app.use('/', chatRoutes);
+app.use('/chat', chatRoutes);
 
 
 app.use((req, res, next) => {
