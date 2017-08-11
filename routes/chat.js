@@ -37,6 +37,26 @@ chatrouter.post('/', function(req, res, next) {
   });
 });
 
+chatrouter.post('/getFriends', (req, res, next) => {
+    friends = [];
+    count = 0;
+    User.findOne({ 'email': `${req.body.email}`}, { 'friends': 1 }, (err, currentUser) => {
+        if(err) { return res.status(500).json(err); };
+        if(currentUser) {
+            currentUser.friends.forEach((friend) => {
+                User.findOne({'_id': friend}, (err, frienddata) => {
+                    count ++
+                    friends.push(frienddata);
+                    if(currentUser.friends.length === count) {
+                        res.json(friends);
+                        // friends = [];
+                        // count = 0;
+                    }
+                })
+            });
+        }
+    })
 
+});
 
 module.exports = chatrouter;

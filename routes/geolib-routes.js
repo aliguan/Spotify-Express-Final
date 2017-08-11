@@ -188,7 +188,7 @@ geoRoutes.post('/addFriend', (req, res, next) => {
         }
     })
 
-})
+});
 
 
 
