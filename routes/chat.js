@@ -5,6 +5,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var Chat = require('../models/chat-model.js');
+var User = require('../models/user-model.js');
 
 server.listen(4000);
 
@@ -35,5 +36,7 @@ chatrouter.post('/', function(req, res, next) {
     res.json(post);
   });
 });
+
+
 
 module.exports = chatrouter;

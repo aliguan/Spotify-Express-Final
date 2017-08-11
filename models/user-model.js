@@ -19,7 +19,8 @@ const UserSchema = Schema({
     type: { type: String, optional: true },
     uri: { type: String, optional: true },
     tracks: [],
-    matchedUsers: []
+    matchedUsers: [],
+    friends: [],
 });
 
 const User = mongoose.model('User', UserSchema);

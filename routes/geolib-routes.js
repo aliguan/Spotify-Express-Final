@@ -78,11 +78,10 @@ geoRoutes.post('/distance', (req, res, next) => {
             }
                 distMatched.forEach((distUser, index, array) => {
                     count ++;
-                    let poop = intersection(currentUser[0].tracks[0], distUser.tracks[0]);
+                    let same = intersection(currentUser[0].tracks[0], distUser.tracks[0]);
                     newMatchedUser = {
-                           percentage: Math.round((poop.length/currentUser[0].tracks[0].length) * 100),
+                           percentage: Math.round((same.length/currentUser[0].tracks[0].length) * 100),
                            userId: distUser._id
-
                     }
                     if(currentUser[0].matchedUsers.length === 0) {
                         currentUser[0].matchedUsers.push(newMatchedUser);
@@ -167,6 +166,29 @@ geoRoutes.post('/getMatchedUsers', (req, res, next) => {
         })
     })
 });
+
+geoRoutes.post('/addFriend', (req, res, next) => {
+
+    User.findOne({ 'email': `${req.body.userEmail}`}, (err, currentUser) => {
+        if(err) { return res.status(500).json(err); };
+        if(currentUser) {
+                if(currentUser.friends.indexOf(req.body.friendId) === -1 ) {
+                    currentUser.friends.push(req.body.friendId);
+                    currentUser.save((err) => {
+                        if(err) {
+                            throw err
+                        } else {
+                            res.sendStatus(200);
+                        }
+                    });
+                } else {
+                    console.log('you friends already')
+                }
+
+        }
+    })
+
+})
 
 
 
