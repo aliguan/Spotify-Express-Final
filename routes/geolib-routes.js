@@ -75,6 +75,7 @@ geoRoutes.post('/distance', (req, res, next) => {
             if(!currentUser[0].tracks[0]) {
                 console.log('please add tracks');
                 return;
+                //implement pop up to tell user to add tracks
             }
                 distMatched.forEach((distUser, index, array) => {
                     count ++;

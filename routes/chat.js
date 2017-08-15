@@ -37,6 +37,7 @@ chatrouter.post('/', function(req, res, next) {
   });
 });
 
+// Get friends for user
 chatrouter.post('/getFriends', (req, res, next) => {
     friends = [];
     count = 0;
