@@ -45,7 +45,7 @@ geoRoutes.post('/distance', (req, res, next) => {
         let uniqueVals2 = uniqueVals.map((oneVal) => {
             return JSON.parse(oneVal);
         })
-
+        // Add new songs
         uniqueVals2.map((oneId) => {
             addThese.forEach((matchedUser) =>{
                 if(oneId == matchedUser.userId) {
