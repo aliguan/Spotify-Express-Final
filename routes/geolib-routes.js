@@ -144,6 +144,7 @@ geoRoutes.post('/distance', (req, res, next) => {
 });
 
 geoRoutes.post('/getMatchedUsers', (req, res, next) => {
+    //Send matched user percentage compatibility to angular 
     let matchedUsers = [];
 
     let count = 0
