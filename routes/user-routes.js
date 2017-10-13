@@ -118,7 +118,9 @@ userRoutes.post('/location', (req, res, next) => {
         coordinates: req.body.coordinates,
         userEmail: req.body.userEmail
     });
+    //Find User via email
     User.findOne({ 'email': `${req.body.userEmail}` }, (err, userFound) => {
+        //If user already exists in database, pull location and add new coordinates
         if(err) { console.log('err from findone'); return res.status(500).json(err) };
         if( userFound ) {
             User.update({'_id': userFound._id },{ $pull:{ 'location': {} } }, (err, updateLocUser) =>{
@@ -127,7 +129,8 @@ userRoutes.post('/location', (req, res, next) => {
                     userFound.location.push(newLocation.coordinates);
                     userFound.save( (err) => {
                         if (err) { throw err }
-                        console.log("location Added!");
+                        // console.log("location Added!");
+                        // console.log(newLocation.coordinates);
                     });
                     res.sendStatus(200);
                 } else {
