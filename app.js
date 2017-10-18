@@ -18,8 +18,8 @@ dotenv.config();
 
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost/spotifydb');
-// mongoose.connect('mongodb://localhost/spotifydb');
-mongoose.createConnection(process.env.MONGODB_URI);
+mongoose.connect('mongodb://heroku_rghc0ctw:ej3rl9os1dvhikp6ub5hcusjve@ds127993.mlab.com:27993/heroku_rghc0ctw');
+// mongoose.createConnection(process.env.MONGODB_URI);
 
 var mongoDB = mongoose.connection;
 
