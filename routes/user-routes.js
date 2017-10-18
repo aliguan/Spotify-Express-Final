@@ -9,7 +9,7 @@ const Location             = require('../models/location-model.js');
 const userRoutes           = express.Router();
 
 userRoutes.post('/newUser', (req, res, next) => {
-    console.log(req.body.images.length)
+    // console.log(req.body.images.length) <--- see if user has profile pic from spotify
     if(JSON.stringify(req.body.images.length) === JSON.stringify(0)) {
         const newUser = new User ({
             country: req.body.country,
@@ -25,11 +25,13 @@ userRoutes.post('/newUser', (req, res, next) => {
         User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
             if(err) { return console.log('cant create'); res.status(500).json(err); };
             if( user ) {
-                console.log('user already in database');
+                //USER IS ALREADY IN database
+                // console.log('user already in database');
                 res.sendStatus(200);
             } else {
                 newUser.save( (err) => {
-                    console.log('trying to save');
+                    //If user is not found, save to database
+                    // console.log('trying to save');
                     if (err)            { return res.status(500).json(err) }
                     if (newUser.errors) { return res.status(400).json(newUser) }
                 });
@@ -56,11 +58,13 @@ userRoutes.post('/newUser', (req, res, next) => {
     User.findOne({ 'email': `${req.body.email}` }, (err, user) => {
         if(err) { return console.log('cant create'); res.status(500).json(err); };
         if( user ) {
-            console.log('user already in database');
+            //USER IS ALREADY IN database
+            // console.log('user already in database');
             res.sendStatus(200);
         } else {
             newUser.save( (err) => {
-                console.log('trying to save');
+                //If user is not found, save to database
+                // console.log('trying to save');
                 if (err)            { return res.status(500).json(err) }
                 if (newUser.errors) { return res.status(400).json(newUser) }
             });
@@ -95,7 +99,8 @@ userRoutes.post('/userTracks', (req, res, next) => {
             //Don't add tracks if they are duplicates
                 if (JSON.stringify(userFound.tracks[0]) === JSON.stringify(newTracks.artistNames))
                 {
-                    console.log('leave me alone');
+
+                    // console.log('leave me alone');
                     res.sendStatus(200);
                 } else {
                 // add tracks to User
@@ -103,7 +108,8 @@ userRoutes.post('/userTracks', (req, res, next) => {
                     userFound.tracks.push(newTracks.artistNames);
                     userFound.save( (err) => {
                         if (err) { throw err }
-                        console.log("Tracks Added!");
+
+                        // console.log("Tracks Added!"); <-- new tracks
                     });
                     res.sendStatus(200);
                 }
