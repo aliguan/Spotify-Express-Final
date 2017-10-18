@@ -7,8 +7,8 @@ const spotifyAuthRoutes   = express.Router();
 
 var client_id = '171a4c5c858c492f838a99535c3d3851'; // Your client id
 var client_secret = '354d93dcc82a42d2ba12064ff8a2eb65';// Your secret
-// var redirect_uri = 'https://spotifriend.herokuapp.com/callback';
-var redirect_uri = 'http://localhost:4200/callback';
+var redirect_uri = 'https://spotifriend.herokuapp.com/callback';
+// var redirect_uri = 'http://localhost:4200/callback';
 /**
  // Your redirect uri
 
