@@ -28,6 +28,7 @@ geoRoutes.post('/distance', (req, res, next) => {
     }
     currentuseremail = req.body.userEmail;
 
+
     function checkIfMatchedAlready(addThese, currentUser) {
 
         otherArray = addThese;
@@ -59,7 +60,6 @@ geoRoutes.post('/distance', (req, res, next) => {
                         });
                     });
 
-
                 } else {
                     console.log('no new things to add')
                 }
@@ -77,8 +77,10 @@ geoRoutes.post('/distance', (req, res, next) => {
                 return;
                 //implement pop up to tell user to add tracks
             }
+            //For every user within 25 mile radius, calculate track compatibility
                 distMatched.forEach((distUser, index, array) => {
                     count ++;
+
                     let same = intersection(currentUser[0].tracks[0], distUser.tracks[0]);
                     newMatchedUser = {
                            percentage: Math.round((same.length/currentUser[0].tracks[0].length) * 100),
@@ -111,29 +113,33 @@ geoRoutes.post('/distance', (req, res, next) => {
             let alreadyMatched = intersection(currentUser[0].matchedUsers[0], matchedUsers);
         })
     }
-    let count = 0
+
+    let count = 0;
     let inRadius = [];
     if (userPos) {
         User.find( { 'email': { $ne: `${req.body.userEmail}`}}, { 'tracks': 1, 'location': 1, 'email': 1 }, (err, otherUsers) => {
-
             if (!err) {
+
                 matchedUsersDist.splice(0);
+
                 otherUsers.forEach((otherUser, index, array) => {
-                    count++
+                    count++;
                     if(otherUser.location[0]) {
                         const distance = geolib.getDistance( userPos, otherUser.location[0], 10 );
                         const convertedDist =  geolib.convertUnit('mi', distance, 2);
 
                         if(convertedDist <= 25) {
+
                             inRadius.push(otherUser);
 
-                            if(count === array.length) {
-                                //If there are no users found in the area, show message
-                                // if(inRadius.length === 0) {
-                                //     res.send('No Users in Area');
-                                // }
-                                findSimilarities(inRadius);
+
+                        }
+                        if(count === array.length) {
+                            //If there are no users found in the area, show message
+                            if(inRadius.length === 0) {
+                                res.send('No Users in Area');
                             }
+                            findSimilarities(inRadius);
                         }
 
 
