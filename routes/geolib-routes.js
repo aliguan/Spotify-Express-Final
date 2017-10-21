@@ -121,6 +121,7 @@ geoRoutes.post('/distance', (req, res, next) => {
             if (!err) {
 
                 matchedUsersDist.splice(0);
+                
 
                 otherUsers.forEach((otherUser, index, array) => {
                     count++;
@@ -137,7 +138,7 @@ geoRoutes.post('/distance', (req, res, next) => {
                         if(count === array.length) {
                             //If there are no users found in the area, show message
                             if(inRadius.length === 0) {
-                                res.send('No Users in Area');
+                                return;
                             }
                             findSimilarities(inRadius);
                         }
